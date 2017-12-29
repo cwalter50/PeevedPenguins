@@ -135,12 +135,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func dieSeal(_ node: SKNode) {
         /* Seal death*/
-        print("seal should disappear")
+        
+        /* Play SFX */
+        let sealSFX = SKAction.playSoundFileNamed("sfx_seal", waitForCompletion: false)
+        self.run(sealSFX)
+        
+        /* Load our particle effect */
+        let particles = SKEmitterNode(fileNamed: "SealExplosion")!
+        
+        /* Convert node location (currently inside LevelHolder, to scene space) */
+        particles.position = convert(node.position, from: node)
+        
+        /* Restrict total particles to reduce runtime of particle */
+        particles.numParticlesToEmit = 25
+        
+        /* Add particles to scene */
+        addChild(particles)
 
-        let removeSeal = SKAction.removeFromParentAfterDelay(1.0)
+        
         /* Create our seal removal action */
-        let sealDeath = SKAction.removeFromParent()
-        node.run(removeSeal)
+        node.removeFromParent()
+//        let sealDeath = SKAction.removeFromParent()
+//        node.run(sealDeath)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
